@@ -1,0 +1,97 @@
+<div class="chat-container">
+    <!-- Sidebar (List of Users) -->
+    <div class="sidebar-chat">
+
+        <div class="header-section">
+                    
+          <div class="user-profile">
+            <img [src]="url_user_photo" alt="Profile Picture" class="user-photo" />
+          </div>
+          {{self_name}}
+          
+          <div class="header-icons">
+            <span class="icon" (click)="openSettings()">
+              <i class="fas fa-cog"></i>
+            </span>
+      
+            <span class="icon" (click)="openMail()">
+              <i class="fas fa-envelope"></i>
+            </span>
+          
+            <span class="icon" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i>
+            </span>
+          </div>
+        </div>
+      
+        
+        <div class="search-section">
+          <div class="search-input">
+            <div class="icon-search">
+              <span >
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+            <div class="text-search">
+              <input type="text" placeholder="Search users...">
+            </div>
+          </div>
+        </div>
+      
+        
+        <div class="user-list-section">
+            <div *ngFor="let user of sidebarLatestMessages" (click)="userListSelected(user)" class="user-container d-flex align-items-center">
+                <div class="user-profile">
+                    <img [src]="user.photoUrl" alt="Profile Picture" class="user-photo img-fluid rounded-circle" />
+                </div>
+                <div class="user-info">
+                    <div class="user-name">{{ user.name }}</div>
+                    <div class="user-message">{{ user.latestMessage }}</div>
+                </div>
+                <div class="user-details text-center ">
+                    <div class="latest-time">{{ user.latestTime }}</div>
+                    <div class="is-read">{{ user.isRead ? 'Read' : 'Unread' }}</div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+  
+    <!-- Chat Box -->
+    <div class="chat-box">
+      <ng-container *ngIf="dialogUser.userid !== null">
+        <div class="header-dialog-user">
+      
+          
+          <div class="user-profile">
+              <img [src]="dialogUser.photoUrl" alt="Profile Picture" class="user-photo" />
+          </div>
+
+          <div class="user-info" >
+            <h3>{{dialogUser.name}}</h3>
+          </div>
+          
+        </div>
+        
+        <div class="dialog-box" (scroll)="onScroll($event)">
+          <div class="dialog" *ngFor="let message of dialogMessages">
+            <span class="user">{{ message.sender_name_used }}:</span>
+            <span class="message">{{ message.message }}</span>
+          </div>
+        </div>
+    
+      
+        <div class="input-box">
+          <div class="row">
+            <div class="col-10">
+              <input class="form-control" [(ngModel)]="newMessage" placeholder="Type your message..." />
+            </div>
+            <div class="col-2 d-grid gap-2">
+              <button  type="button" class="btn btn-primary btn-block" (click)="sendMessage()">Send</button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>

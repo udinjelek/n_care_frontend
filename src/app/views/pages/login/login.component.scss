@@ -1,0 +1,11 @@
+.btn-no-rounded {
+    border-radius: 0; /* Removes rounded corners */
+  }
+
+  .custom-btn-first {
+    border-top-left-radius: 0.65rem; /* Curved top-left corner */
+  }
+
+  .custom-btn-last {
+    border-bottom-right-radius: 0.65rem; /* Curved bottom-right corner */
+  }
