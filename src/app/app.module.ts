@@ -4,7 +4,8 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
-
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SocketService } from './_services/socket.service';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 
 // Import routing module
@@ -38,6 +39,8 @@ import {
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
+
+const config: SocketIoConfig = { url: 'http://127.0.0.1:5001', options: {} };
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
@@ -76,6 +79,7 @@ const APP_CONTAINERS = [
     NgScrollbarModule,
     FormsModule,
     HttpClientModule ,
+    SocketIoModule.forRoot(config),
   ],
   providers: [
     {
@@ -84,7 +88,7 @@ const APP_CONTAINERS = [
     },
     IconSetService,
     Title,
-    
+    SocketService,
   ],
   bootstrap: [AppComponent]
 })

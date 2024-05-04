@@ -6,6 +6,8 @@ import { ChatMessageService} from 'src/app/_services/chat-message.service'
 import { Router} from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import { Observer } from 'rxjs';
+import { SocketService } from 'src/app/_services/socket.service';
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,8 +23,8 @@ export class ChatComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private chatMessageService: ChatMessageService
-
+    private chatMessageService: ChatMessageService,
+    private socketService: SocketService
   ){
     this.isLoggedIn = this.authService.getLoggedInStatus();
     if (!this.isLoggedIn){
@@ -32,6 +34,7 @@ export class ChatComponent {
     console.log('login status: ',this.isLoggedIn)
   }
   @HostListener('scroll', ['$event'])
+  isAdmin:number = 0;
   isLoggedIn:boolean ;
   loadScroll:boolean = false;
   newMessage:string='';
@@ -125,6 +128,7 @@ export class ChatComponent {
             this.sidebarLatestMessages = response.data.sidebar;
             this.url_user_photo = response.data.self.photo_url;
             this.self_name =  response.data.self.name;
+            this.isAdmin = response.data.self.is_admin;
             console.log(response.data);
           } else {
             // Handle errors here (optional)
@@ -140,6 +144,13 @@ export class ChatComponent {
 
   ngOnInit(): void {
     this.getSidebarChat();
+    this.socketService.connectToChat();
+    this.socketService.onNewMessage().subscribe((message: any) => {
+      // Handle new message received
+      console.log('New message received:', message);
+      Swal.fire('info',message.sender_id + ': ' + message.message,'info');
+      // Update the UI to show the new message
+    });
   }
 
   openSettings(){}
@@ -151,39 +162,29 @@ export class ChatComponent {
     this.router.navigate(['./login']);
   }
 
-  // sendMessage(){
-  //   this.chatMessageService.getUser().subscribe(
-  //     response => {
-  //       if (response.status) {
-  //       } else {
-  //         Swal.fire('Get Data CostAllocation ', response.message, 'warning');
-          
-  //       }
-  //       // this.loadingData = false;
-  //     }, error => {
-  //       Swal.fire('Get Data CostAllocation ', error.error.message, 'error');
-        
-  //       // this.loadingData = false;
-        
-  //     }
-  //   ); 
-
-  // }
 
   sendMessage(){
-    let params = {'self_id' : 10, 'target_id': 23, 'message': this.newMessage };
-    Swal.fire('-',this.newMessage)
-    // this.chatMessageService.getChatHistory(params).subscribe(
-    //   response => {
-    //       if(response.status){
+    let params = {'self_id' : this.selfid, 'target_id': this.dialogUser.userid, 'message': this.newMessage };
+    
+    this.chatMessageService.sendMessage(params).subscribe(
+      response => {
+          if(response.status){
+            if (response.data == 'success'){
+              let self_name_used = this.self_name;
+              if (this.isAdmin == 1) 
+                {   self_name_used = 'CS (' + self_name_used + ')' }
+              this.dialogMessages.push( { sender_id:this.selfid
+                                        , sender_name_used: self_name_used
+                                        , message:this.newMessage })
+              this.newMessage = '';
+            }
+          }else{
 
-    //       }else{
-
-    //       }
-    //   }, error => {
-    //     Swal.fire('Get Data CostAllocation ', error.error.message, 'error');
-    //   }
-    // );
+          }
+      }, error => {
+        Swal.fire('Send Message Error ', error.error.message, 'error');
+      }
+    );
   }
 
   getMessage(){

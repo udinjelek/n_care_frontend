@@ -48,4 +48,16 @@ export class ChatMessageService {
       API_BASE_URL + 'sidebar_chat' , {params: queryParams}
        );
   }
+
+  public sendMessage(params: {self_id: number, target_id: number, message: string}): Observable<any>{
+    const requestBody = {
+      self_id: params.self_id,
+      target_id: params.target_id,
+      message: params.message
+    };
+  
+    return this.http.post(
+      API_BASE_URL + 'send_message', requestBody
+    );
+  }
 }
