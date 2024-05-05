@@ -1,4 +1,4 @@
-import { Component, HostListener  } from '@angular/core';
+import { Component, HostListener, ViewChild, ElementRef   } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogMessage, SidebarLatestMessage } from './chat.interfaces';
@@ -19,7 +19,7 @@ import Swal from 'sweetalert2';
 })
 
 export class ChatComponent {
-
+  @ViewChild('dialogBox') dialogBox!: ElementRef;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -148,8 +148,9 @@ export class ChatComponent {
     this.socketService.onNewMessage().subscribe((message: any) => {
       // Handle new message received
       console.log('New message received:', message);
-      Swal.fire('info',message.sender_id + ': ' + message.message,'info');
-      // Update the UI to show the new message
+      this.retriveNewMessage(message) // Update the UI to show the new message
+      this.scrollToBottom(); 
+      
     });
   }
 
@@ -170,16 +171,16 @@ export class ChatComponent {
       response => {
           if(response.status){
             if (response.data == 'success'){
-              let self_name_used = this.self_name;
-              if (this.isAdmin == 1) 
-                {   self_name_used = 'CS (' + self_name_used + ')' }
-              this.dialogMessages.push( { sender_id:this.selfid
-                                        , sender_name_used: self_name_used
-                                        , message:this.newMessage })
+              // let self_name_used = this.self_name;
+              // if (this.isAdmin == 1) 
+              //   {   self_name_used = 'CS (' + self_name_used + ')' }
+              // this.dialogMessages.push( { sender_id:this.selfid
+              //                           , sender_name_used: self_name_used
+              //                           , message:this.newMessage })
               this.newMessage = '';
             }
           }else{
-
+            Swal.fire('Send Message Error ', 'error');
           }
       }, error => {
         Swal.fire('Send Message Error ', error.error.message, 'error');
@@ -246,5 +247,63 @@ export class ChatComponent {
         this.loadScroll = false;
       }
     }
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      const dialogBoxElement = this.dialogBox.nativeElement;
+      dialogBoxElement.scrollTop = dialogBoxElement.scrollHeight;
+    }, 100); 
+  }
+
+  retriveNewMessage(message:any){
+    // user adalah admin
+    if (this.isAdmin == 1)
+    {   
+        // nerima mesej yg ngirim dari admin, (bisa diri sendiri, bisa rekan yg login tapi sama sama admin)
+        if (message.sender_id_alias == 0 )
+        {
+          this.dialogMessages.push( { sender_id: message.sender_id
+                                    , sender_name_used: 'CS (' + message.sender_firstname + ')'
+                                    , message: message.message 
+                                    , }
+                                  )
+        } 
+        // nerima mesej yg ngirim dari client 
+        else 
+        {
+          this.dialogMessages.push( { sender_id: message.sender_id
+            , sender_name_used: message.sender_firstname 
+            , message: message.message 
+            , }
+          )
+        }
+    } 
+
+    // user adalah client
+    else 
+    {
+        // nerima mesej yg ngirim dari admin, (kita g tau siapa admin nya, karena kita adalah cilent)
+        if (message.sender_id_alias == 0 )
+          {
+            this.dialogMessages.push( { sender_id: message.sender_id
+                                      , sender_name_used: 'Customer Care'
+                                      , message: message.message 
+                                      , }
+                                    )
+          } 
+          // nerima mesej yg ngirim dari client (bisa kita, bisa rekan kita) 
+          else 
+          {
+            this.dialogMessages.push( { sender_id: message.sender_id
+              , sender_name_used: message.sender_firstname 
+              , message: message.message 
+              , }
+            )
+          }
+    }
+
+
+
   }
 }
