@@ -10,15 +10,15 @@
           {{self_name}}
           
           <div class="header-icons">
-            <span class="icon" (click)="openSettings()">
+            <span class="icon-sidebar" (click)="openSettings()">
               <i class="fas fa-cog"></i>
             </span>
       
-            <span class="icon" (click)="openMail()">
+            <span class="icon-sidebar" (click)="openMail()">
               <i class="fas fa-envelope"></i>
             </span>
           
-            <span class="icon" (click)="logout()">
+            <span class="icon-sidebar" (click)="logout()">
               <i class="fas fa-sign-out-alt"></i>
             </span>
           </div>
@@ -26,32 +26,35 @@
       
         
         <div class="search-section">
-          <div class="search-input">
-            <div class="icon-search">
-              <span >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text icon-search">
                 <i class="fas fa-search"></i>
               </span>
             </div>
-            <div class="text-search">
-              <input type="text" placeholder="Search users...">
-            </div>
+            <input type="text" class="form-control text-search" placeholder="Search users...">
           </div>
         </div>
       
         
         <div class="user-list-section">
-            <div *ngFor="let user of sidebarLatestMessages" (click)="userListSelected(user)" class="user-container d-flex align-items-center">
-                <div class="user-profile">
+            <div *ngFor="let user of sidebarLatestMessages" (click)="userListSelected(user)" class="user-container d-flex justify-content-between align-items-center">
+                <div class="user-profile" style="width: 40px;">
                     <img [src]="user.photoUrl" alt="Profile Picture" class="user-photo img-fluid rounded-circle" />
                 </div>
-                <div class="user-info">
-                    <div class="user-name">{{ user.name }}</div>
+                <div class="user-info flex-grow-1">
+                    <div class="d-flex justify-content-between">
+                      <div class="user-name">{{ user.name }}</div>
+                      
+                      <div class="timestamp marginLeft20">{{ user.date_time_string }}</div>
+                    </div>
+                    
                     <div class="user-message">{{ user.latestMessage }}</div>
                 </div>
-                <div class="user-details text-center ">
-                    <div class="latest-time">{{ user.latestTime }}</div>
-                    <div class="is-read">{{ user.isRead ? 'Read' : 'Unread' }}</div>
-                </div>
+                <!-- <div class="user-details" style="width: 20px;"> 
+                    <div class="latest-time text-right">{{ user.latestTime }}</div>
+                    <div class="is-read text-right">{{ user.isRead ? 'Read' : 'Unread' }}</div>
+                </div> -->
             </div>
         </div>
 
@@ -75,9 +78,32 @@
         </div>
         
         <div class="dialog-box" #dialogBox (scroll)="onScroll($event)">
-          <div class="dialog" *ngFor="let message of dialogMessages">
-            <span class="user">{{ message.sender_name_used }}:</span>
-            <span class="message">{{ message.message }}</span>
+          <div [ngClass]="{'dialog':true, 'marginLast':message.is_last }" *ngFor="let message of dialogMessages">
+            <div class="message-wrapper">
+              
+              <!-- kanan -->
+              <ng-container *ngIf="message.group_ally">
+                <div  [ngClass]="{'message-bubble-right':true, 'flat-top-right':!message.is_first, 'flat-bottom-right':!message.is_last }" >
+                  <div class="d-flex justify-content-between">
+                    <div class="timestamp">{{ message.date_time_string }}</div>
+                    <div class="user marginLeft20">{{ message.sender_name_used }}</div>
+                  </div>
+                  <span>{{ message.message }}</span>
+                </div>
+              </ng-container>
+
+              <!-- kiri -->
+              <ng-container *ngIf="!message.group_ally">
+                <div  [ngClass]="{'message-bubble-left':true, 'flat-top-left':!message.is_first, 'flat-bottom-left':!message.is_last }" >
+                  <div class="d-flex justify-content-between">
+                    <div class="user">{{ message.sender_name_used }}</div>
+                    <div class="timestamp marginLeft20">{{ message.date_time_string }}</div>
+                  </div>
+                  <span>{{ message.message }}</span>
+                </div>
+              </ng-container>
+
+            </div>
           </div>
         </div>
     
@@ -88,7 +114,7 @@
               <input class="form-control" [(ngModel)]="newMessage" placeholder="Type your message..." />
             </div>
             <div class="col-2 d-grid gap-2">
-              <button  type="button" class="btn btn-primary btn-block" (click)="sendMessage()">Send</button>
+              <button  type="button" class="btn send-color btn-block" (click)="sendMessage()">Send</button>
             </div>
           </div>
         </div>

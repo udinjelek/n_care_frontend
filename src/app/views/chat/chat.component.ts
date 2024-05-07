@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 
 export class ChatComponent {
   @ViewChild('dialogBox') dialogBox!: ElementRef;
+  
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -34,6 +35,7 @@ export class ChatComponent {
     console.log('login status: ',this.isLoggedIn)
   }
   @HostListener('scroll', ['$event'])
+  blank_text: string = '_____';
   isAdmin:number = 0;
   isLoggedIn:boolean ;
   loadScroll:boolean = false;
@@ -46,77 +48,9 @@ export class ChatComponent {
                       name:'Amy',
                       photoUrl: ''
                     };
-  dialogMessages: DialogMessage[] = [
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'Hello!' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Hi there!' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'How are you?' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'I\'m doing well, thank you.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'That\'s great!' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Yes, it is.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'What have you been up to?' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'I\'m working on a new feature for our app.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'Sounds exciting!' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'It is! How about you?' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'I\'m studying for exams.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Good luck with your exams!' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'Thanks!' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Anytime.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'It was nice chatting with you.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Likewise!' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'Have you heard the story of the tortoise and the hare?' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Yes, it\'s a classic!' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'Once upon a time, there was a speedy hare who bragged about how fast he could run.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'He was always teasing the slow-moving tortoise.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'The tortoise, tired of the hare\'s boasting, challenged him to a race.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'The hare accepted the challenge, confident in his speed.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'On the day of the race, the hare sprinted ahead and quickly left the tortoise behind.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'However, the hare became overconfident and decided to take a nap under a tree.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'Meanwhile, the tortoise continued at a slow but steady pace.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'To the hare\'s surprise, when he woke up, he found the tortoise near the finish line.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'The slow and steady tortoise won the race, proving that consistency pays off.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'The moral of the story: Slow and steady wins the race.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'In a small village, there was a wise old man known for his insightful advice.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'People from neighboring villages would often seek his guidance.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'One day, a young man approached the wise old man and asked for the secret to a happy life.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'The wise old man smiled and said, "Gratitude is the key. Be grateful for what you have, and happiness will follow."' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'The young man pondered on these words and decided to practice gratitude in his daily life.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Over time, he found that his perspective shifted, and he indeed became happier.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'The moral of the story: Cultivating gratitude leads to a content and joyful life.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Remember, it\'s not about having more; it\'s about appreciating what you already have.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'As the sun set on the horizon, painting the sky in hues of orange and pink,' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'a group of friends gathered around a bonfire for a night of storytelling.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'Each friend took turns sharing their most cherished memories and dreams.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Under the starlit sky, the atmosphere was filled with laughter, warmth, and camaraderie.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'In that moment, they realized the true beauty of friendship and the magic of shared moments.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'The crackling of the fire seemed to echo the bonds they had formed over the years.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'The night became a memory etched in their hearts, a reminder of the power of connection.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'And so, they continued to create stories together, woven into the fabric of their friendship.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'The journey continued through picturesque landscapes and ancient forests.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'As they ventured deeper into the unknown, they discovered hidden treasures and mysteries.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'Each step brought new challenges, but also moments of awe and wonder.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'Their courage and determination forged a path through adversity.' },
-            { sender_id:  14, sender_name_used: 'Kail' , message: 'In the end, they stood at the summit, gazing at the vast expanse below.' },
-            { sender_id:  15, sender_name_used: 'Amy' , message: 'The view was breathtaking, a testament to their resilience and shared triumphs.' },
-  ];
+  dialogMessages: DialogMessage[] = [];
 
-  sidebarLatestMessages: SidebarLatestMessage[] = [
-    { userid:15,
-      name: 'Amy', 
-      latestMessage: 'Hey!', 
-      latestTime: '12:30 PM', 
-      isRead: true,
-      photoUrl:  'https://randomuser.me/api/portraits/men/76.jpg'
-    },
-    { userid:14,
-      name: 'Kail', 
-      latestMessage: 'What\'s up?', 
-      latestTime: '1:45 PM', 
-      isRead: false,
-      photoUrl:  'https://randomuser.me/api/portraits/men/75.jpg'
-    },
-    
-    // ... other latest messages
-  ];
+  sidebarLatestMessages: SidebarLatestMessage[] = [];
 
   getSidebarChat(){
     this.selfid
@@ -126,6 +60,7 @@ export class ChatComponent {
             console.log(this.sidebarLatestMessages);
             console.log('====================================================');
             this.sidebarLatestMessages = response.data.sidebar;
+            this.translate_timestamp_to_datetime_string_in_sidebarLatestMessages()
             this.url_user_photo = response.data.self.photo_url;
             this.self_name =  response.data.self.name;
             this.isAdmin = response.data.self.is_admin;
@@ -150,6 +85,7 @@ export class ChatComponent {
       console.log('New message received:', message);
       this.retriveNewMessage(message) // Update the UI to show the new message
       this.scrollToBottom(); 
+      this.retriveNewSidebar(message);
       
     });
   }
@@ -168,22 +104,15 @@ export class ChatComponent {
     let params = {'self_id' : this.selfid, 'target_id': this.dialogUser.userid, 'message': this.newMessage };
     
     this.chatMessageService.sendMessage(params).subscribe(
-      response => {
-          if(response.status){
-            if (response.data == 'success'){
-              // let self_name_used = this.self_name;
-              // if (this.isAdmin == 1) 
-              //   {   self_name_used = 'CS (' + self_name_used + ')' }
-              // this.dialogMessages.push( { sender_id:this.selfid
-              //                           , sender_name_used: self_name_used
-              //                           , message:this.newMessage })
-              this.newMessage = '';
-            }
-          }else{
-            Swal.fire('Send Message Error ', 'error');
+      {
+        next: (response) => { 
+          if (response.data == 'success'){
+            this.newMessage = '';
           }
-      }, error => {
-        Swal.fire('Send Message Error ', error.error.message, 'error');
+        },
+        error: ( error) => { // Type the error for clarity
+            Swal.fire('Send Message Error  ', error.error.message, 'error');
+          },
       }
     );
   }
@@ -227,7 +156,10 @@ export class ChatComponent {
       {
         next: (response) => { 
             this.dialogMessages = response.data;
-            console.log(response)
+            this.translate_timestamp_to_datetime_string_in_dialogMessages()
+            this.calculate_dialogMessages_isFirst_isLast()
+            // console.log(this.dialogMessages)
+            this.scrollToBottom()
         },
         error: ( error) => { // Type the error for clarity
             Swal.fire('Get Side Chat ', error.error.message, 'error');
@@ -257,26 +189,49 @@ export class ChatComponent {
   }
 
   retriveNewMessage(message:any){
+  
     // user adalah admin
     if (this.isAdmin == 1)
     {   
-        // nerima mesej yg ngirim dari admin, (bisa diri sendiri, bisa rekan yg login tapi sama sama admin)
-        if (message.sender_id_alias == 0 )
+        // nerima mesej. yg ngirim dari admin, (bisa diri sendiri, bisa rekan yg login tapi sama sama admin)
+        // user lagi buka chatingan dengan target
+        if (message.sender_id_alias == 0 
+          &&  message.receive_id == this.dialogUser.userid)
         {
-          this.dialogMessages.push( { sender_id: message.sender_id
-                                    , sender_name_used: 'CS (' + message.sender_firstname + ')'
-                                    , message: message.message 
-                                    , }
-                                  )
+                this.dialogMessages.push( { sender_id: message.sender_id
+                                          , sender_name_used: 'CS (' + message.sender_firstname + ')'
+                                          , message: message.message 
+                                          , receive_id: message.receive_id 
+                                          , timestamp: message.timestamp
+                                          , date_time_string: this.translateTimestampToDatetimeString(message.timestamp)
+                                          , group_ally: true
+                                          , is_first: true
+                                          , is_last: true
+                                          , }
+                                        )
+                this.calculate_dialogMessages_isFirst_isLast()
+                console.log(this.dialogMessages)
+
         } 
         // nerima mesej yg ngirim dari client 
-        else 
+        // cek apakah user lagi buka chatingan dengan client
+        if (message.sender_id_alias == this.dialogUser.userid 
+           &&  message.receive_id == 0)
         {
-          this.dialogMessages.push( { sender_id: message.sender_id
-            , sender_name_used: message.sender_firstname 
-            , message: message.message 
-            , }
-          )
+          
+                this.dialogMessages.push( { sender_id: message.sender_id
+                                          , sender_name_used: message.sender_firstname 
+                                          , message: message.message 
+                                          , receive_id: message.receive_id 
+                                          , timestamp: message.timestamp
+                                          , date_time_string: this.translateTimestampToDatetimeString(message.timestamp)
+                                          , group_ally: false
+                                          , is_first: true
+                                          , is_last: true
+                                          , }
+                                        )
+                this.calculate_dialogMessages_isFirst_isLast()
+                console.log(this.dialogMessages)
         }
     } 
 
@@ -284,26 +239,197 @@ export class ChatComponent {
     else 
     {
         // nerima mesej yg ngirim dari admin, (kita g tau siapa admin nya, karena kita adalah cilent)
-        if (message.sender_id_alias == 0 )
+        // kita sebagai client nereima message
+        // kita lagi buka chat sama admin
+        if (    message.sender_id_alias == 0 
+            &&  message.receive_id == this.selfid 
+            &&  0 == this.dialogUser.userid)
           {
             this.dialogMessages.push( { sender_id: message.sender_id
                                       , sender_name_used: 'Customer Care'
                                       , message: message.message 
+                                      , receive_id: message.receive_id 
+                                      , timestamp: message.timestamp
+                                      , date_time_string: this.translateTimestampToDatetimeString(message.timestamp)
+                                      , group_ally: false
+                                      , is_first: true
+                                      , is_last: true
                                       , }
                                     )
+            this.calculate_dialogMessages_isFirst_isLast()
+            console.log(this.dialogMessages)
           } 
-          // nerima mesej yg ngirim dari client (bisa kita, bisa rekan kita) 
-          else 
+          // kita sebagai client ngirim messeage,
+          //  yang kita kirim, chat nya sedang kita buka
+          if (    message.sender_id_alias == this.selfid 
+            &&  message.receive_id == this.dialogUser.userid)
           {
             this.dialogMessages.push( { sender_id: message.sender_id
-              , sender_name_used: message.sender_firstname 
-              , message: message.message 
-              , }
-            )
+                                      , sender_name_used: message.sender_firstname 
+                                      , message: message.message 
+                                      , receive_id: message.receive_id 
+                                      , timestamp: message.timestamp
+                                      , date_time_string: this.translateTimestampToDatetimeString(message.timestamp)
+                                      , group_ally: true
+                                      , is_first: true
+                                      , is_last: true
+                                      , }
+                                    )
+            this.calculate_dialogMessages_isFirst_isLast()
+            console.log(this.dialogMessages)
           }
     }
+  }
 
+  retriveNewSidebar(message:any){
+    const maxLength = 20;
+    // potong message.message jadi 20 char + ... karena kalau kebanyakan akan over size di tampilan sidebar nya
+    const truncatedMessage = message.message.length > maxLength ? message.message.substring(0, maxLength) + '...' : message.message
+    // jika kita adalah admin
+    if (this.isAdmin == 1)
+    {   
+      if (message.sender_id_alias == 0 )
+      {   this.updateSidebar( message.receive_id, truncatedMessage, message.timestamp);
+          this.sort_sidebarLatestMessages();
+      }
+      if (message.receive_id == 0 )
+      {   this.updateSidebar( message.sender_id_alias, truncatedMessage, message.timestamp);
+          this.sort_sidebarLatestMessages();
+      }
+    }
+    // jika kita bukan admin
+    else 
+    {
+      // jika yg chat adalah admin kepada kita.
+      // atau yg chat adalah kita kepada admin.
+      if ( (message.sender_id_alias == 0 && message.receive_id == this.selfid  ) 
+        || (message.sender_id_alias == this.selfid && message.receive_id == 0  ) )
+        {   this.updateSidebar( 0, truncatedMessage, message.timestamp);
+            this.sort_sidebarLatestMessages();
+        }
+      
+      // jika yg chat adalah kita kepada non admin.  
+      if (message.sender_id_alias == this.selfid  && message.receive_id != 0 ) 
+        {   this.updateSidebar( message.receive_id, truncatedMessage, message.timestamp);
+            this.sort_sidebarLatestMessages();
+        }
+      
+      // jika yg chat adalah non admin kepada kita.  
+      if (message.sender_id_alias != 0 && message.receive_id == this.selfid ) 
+        {   this.updateSidebar( message.sender_id_alias, truncatedMessage, message.timestamp);
+            this.sort_sidebarLatestMessages();
+        }
+    }
+  }
 
+  updateSidebar( param_id:number, param_message:string, param_timestamp:number)
+  {
+    let findMatchId = false;
+    let idMatch = 0;
+    let new_message: SidebarLatestMessage;
+    for (let i = 0; i < this.sidebarLatestMessages.length; i++) 
+    { 
+      new_message = this.sidebarLatestMessages[i];
+        if (new_message.userid == param_id)
+        {   
+            idMatch = i;
+            findMatchId = true;
+            break;
+        }
+    }
 
+    // jika id ketemu dengan semua list yg ada di existing
+    if (findMatchId )
+    {   new_message = this.sidebarLatestMessages[idMatch];
+        new_message.userid = param_id;
+        new_message.latestMessage = param_message;
+        new_message.timestamp = param_timestamp;
+        new_message.date_time_string = this.translateTimestampToDatetimeString(param_timestamp);
+        this.sidebarLatestMessages[idMatch] = new_message;
+    }
+    // jika tidak ketemu
+    else
+    {
+      // harusnya sidebar appand 1 data
+      // karena ada user baru yg belum pernah chat sebelumnya
+      // jangan lupa tambah foto juga
+    }
+
+  }
+
+  calculate_dialogMessages_isFirst_isLast(): void 
+  {
+    for (let i = 0; i < this.dialogMessages.length; i++) 
+    {
+      const message = this.dialogMessages[i];
+      message.is_first = false;
+      message.is_last = false;
+      // Check if it's the first message
+      if (i == 0) {
+        message.is_first = true;
+      } else {
+        // Check if groupAlly is different from previous
+        if (message.group_ally != this.dialogMessages[i - 1].group_ally) {
+          message.is_first = true;
+          this.dialogMessages[i - 1].is_last = true; // Set previous message as last
+        }
+      }
+  
+      // Check if it's the last message
+      if (i == this.dialogMessages.length - 1) {
+        message.is_last = true;
+      } else {
+        // Check if groupAlly is different from next
+        if (message.group_ally != this.dialogMessages[i + 1].group_ally) {
+          message.is_last = true;
+        }
+      }
+  
+      // Update the message back in the dialogMessages array
+      this.dialogMessages[i] = message;
+    }
+  }
+
+  // translateTimestampToDatetimeString(timestampSource: number): string {
+  //   const date = new Date(timestampSource * 1000); // Convert timestamp to milliseconds
+  //   const year = date.getFullYear();
+  //   const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding leading zero if needed
+  //   const day = ('0' + date.getDate()).slice(-2); // Adding leading zero if needed
+  //   const hours = ('0' + date.getHours()).slice(-2); // Adding leading zero if needed
+  //   const minutes = ('0' + date.getMinutes()).slice(-2); // Adding leading zero if needed
+  //   const seconds = ('0' + date.getSeconds()).slice(-2); // Adding leading zero if needed
+  
+  //   return `${year}-${month}-${day} ${hours}:${minutes}`;
+  // }
+  
+  translateTimestampToDatetimeString(timestampSource: number): string {
+    const date = new Date(timestampSource * 1000); // Convert timestamp to milliseconds
+  
+    const day = ('0' + date.getDate()).slice(-2); // Get the day with leading zero if needed
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthIndex = date.getMonth();
+    const month = monthNames[monthIndex]; // Get the abbreviated month name
+    const year = date.getFullYear(); // Get the full year
+  
+    const hours = ('0' + date.getHours()).slice(-2); // Get the hours with leading zero if needed
+    const minutes = ('0' + date.getMinutes()).slice(-2); // Get the minutes with leading zero if needed
+  
+    return `${day} ${month} ${year}, ${hours}:${minutes}`;
+  }
+
+  translate_timestamp_to_datetime_string_in_dialogMessages():void{
+    this.dialogMessages.forEach(message => {
+      message.date_time_string = this.translateTimestampToDatetimeString(message.timestamp);
+    });
+  }
+
+  translate_timestamp_to_datetime_string_in_sidebarLatestMessages():void{
+    this.sidebarLatestMessages.forEach(message => {
+      message.date_time_string = this.translateTimestampToDatetimeString(message.timestamp);
+    });
+  }
+
+  sort_sidebarLatestMessages():void{
+    this.sidebarLatestMessages.sort((a, b) => b.timestamp - a.timestamp);
   }
 }
