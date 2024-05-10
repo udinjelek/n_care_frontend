@@ -91,31 +91,30 @@
   
   
   
-  .search-section {
-    .input-group {
-      position: relative;
-      padding: 0px 10px;
-      height: 40px;
-      .icon-search {
-        // background-color: transparent;
-        // border: none;
-        border-top-right-radius: 0px;
-        border-bottom-right-radius: 0px;
-        background-color:#423f3f;
-        height: 100%;
-        display: flex;
-        align-items: center;
-      }
-  
-      .form-control {
-        padding-left: 2rem; // Adjust as needed for the icon spacing
-      }
-  
-      .icon-search i {
-        font-size: 1rem; // Adjust icon size as needed
-      }
+  .input-group {
+    position: relative;
+    padding: 0px 10px;
+    height: 40px;
+    .icon-search {
+      // background-color: transparent;
+      // border: none;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      background-color:#423f3f;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-control {
+      padding-left: 2rem; // Adjust as needed for the icon spacing
+    }
+
+    .icon-search i {
+      font-size: 1rem; // Adjust icon size as needed
     }
   }
+  
   /* Add more styles as needed */
   
  
@@ -131,9 +130,39 @@
     width: calc(100vw - 300px);
   }
   
+  .render-box-image {
+    margin-left: 20px;
+    height: calc(100vh - 119px); /* Adjust the max-height as needed */
+    overflow-y:hidden;
+    overflow-x:hidden;
+    padding: 10px;
+  }
+  
+  .render-box-file {
+    margin-left: 20px;
+    height: 100px; /* Adjust the max-height as needed */
+    overflow-y:hidden;
+    overflow-x:hidden;
+    padding: 10px;
+  }
+
   .dialog-box {
     margin-left: 20px;
-    height: calc(100vh - 120px); /* Adjust the max-height as needed */
+    height: calc(100vh - 110px); /* Adjust the max-height as needed */
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .dialog-box-preview-image {
+    margin-left: 20px;
+    height: 1px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .dialog-box-preview-file {
+    margin-left: 20px;
+    height: calc(100vh - 220px);
     overflow-y: auto;
     padding: 10px;
   }
@@ -246,5 +275,36 @@
   }
 
   .send-color{
-    background-color:#151414
+    background-color:#151414;
+    width: auto; /* Allow button to adjust width based on content */
+  }
+
+
+  .input-container {
+    display: flex;
+  }
+  
+  .text-box-left {
+    flex: 1; /* Take remaining space */
+    margin-right: 5px; /* Add spacing between input and button */
+  }
+  
+
+  .attach-color {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color:#151414;
+    width: auto; /* Allow button to adjust width based on content */
+  }
+
+  .container-attachment-image {
+    width: 100%; /* Set the width of the container */
+    height: calc(100% - 40px); /* Set the fixed height of the container */
+    overflow: hidden; /* Hide any overflow from the image */
+  }
+  
+  .preview-image {
+    width: 100%; /* Make the image fill the container horizontally */
+    height: 100%; /* Allow the image to adjust its height proportionally */
+    object-fit: contain; /* Scale the image to fit within the container without stretching */
   }

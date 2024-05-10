@@ -7,7 +7,7 @@ import { Router} from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import { Observer } from 'rxjs';
 import { SocketService } from 'src/app/_services/socket.service';
-
+import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,12 +20,13 @@ import Swal from 'sweetalert2';
 
 export class ChatComponent {
   @ViewChild('dialogBox') dialogBox!: ElementRef;
-  
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
   constructor(
     private authService: AuthService,
     private router: Router,
     private chatMessageService: ChatMessageService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private http: HttpClient,
   ){
     this.isLoggedIn = this.authService.getLoggedInStatus();
     if (!this.isLoggedIn){
@@ -33,6 +34,7 @@ export class ChatComponent {
     }
     this.selfid = this.authService.getLoggedInUserid();
     console.log('login status: ',this.isLoggedIn)
+    
   }
   @HostListener('scroll', ['$event'])
   blank_text: string = '_____';
@@ -49,8 +51,13 @@ export class ChatComponent {
                       photoUrl: ''
                     };
   dialogMessages: DialogMessage[] = [];
-
   sidebarLatestMessages: SidebarLatestMessage[] = [];
+
+  selectedFile: File = new File(['file content'], '', { type: 'text/plain' });
+  selectedFile_isPicture:boolean = false;
+  attachmentData:FormData = new FormData()
+  
+  renderPreview: string | ArrayBuffer | null = null;
 
   getSidebarChat(){
     this.selfid
@@ -99,11 +106,11 @@ export class ChatComponent {
     this.router.navigate(['./login']);
   }
 
-
   sendMessage(){
-    let params = {'self_id' : this.selfid, 'target_id': this.dialogUser.userid, 'message': this.newMessage };
     
-    this.chatMessageService.sendMessage(params).subscribe(
+    // let params = {'self_id' : this.selfid, 'target_id': this.dialogUser.userid, 'message': this.newMessage, 'attachmentData':this.attachmentData };
+    // console.log(params)
+    this.chatMessageService.sendMessage(this.selectedFile, this.selfid, this.dialogUser.userid, this.newMessage ).subscribe(
       {
         next: (response) => { 
           if (response.data == 'success'){
@@ -115,21 +122,24 @@ export class ChatComponent {
           },
       }
     );
+
+    // clear attachmentData
+    this.resetVar()
   }
 
-  getMessage(){
-    let params = {'self_id' : 10, 'target_id': 23 };
-    this.chatMessageService.getChatHistory(params).subscribe(
-      {
-        next: (response) => { 
+  // getMessage(){
+  //   let params = {'self_id' : 10, 'target_id': 23 };
+  //   this.chatMessageService.getChatHistory(params).subscribe(
+  //     {
+  //       next: (response) => { 
         
-        },
-        error: ( error) => { // Type the error for clarity
-            Swal.fire('Get Side Chat ', error.error.message, 'error');
-          },
-      }
-    );
-  }
+  //       },
+  //       error: ( error) => { // Type the error for clarity
+  //           Swal.fire('Get Side Chat ', error.error.message, 'error');
+  //         },
+  //     }
+  //   );
+  // }
 
   userListSelected(selected_user:any){
    
@@ -151,6 +161,7 @@ export class ChatComponent {
 
   loadChatFrom_dialogUser()
   {
+    this.resetVar()
     let params = {'self_id' : this.selfid, 'target_id': this.dialogUser.userid };
     this.chatMessageService.getChatHistory(params).subscribe(
       {
@@ -158,6 +169,7 @@ export class ChatComponent {
             this.dialogMessages = response.data;
             this.translate_timestamp_to_datetime_string_in_dialogMessages()
             this.calculate_dialogMessages_isFirst_isLast()
+            this.checkLinkValidityForAll()
             // console.log(this.dialogMessages)
             this.scrollToBottom()
         },
@@ -181,15 +193,46 @@ export class ChatComponent {
     }
   }
 
+  // scrollToBottom() {
+  //   setTimeout(() => {
+  //     const dialogBoxElement = this.dialogBox.nativeElement;
+  //     dialogBoxElement.scrollTop = dialogBoxElement.scrollHeight;
+  //   }, 100); 
+  // }
+
   scrollToBottom() {
     setTimeout(() => {
       const dialogBoxElement = this.dialogBox.nativeElement;
-      dialogBoxElement.scrollTop = dialogBoxElement.scrollHeight;
-    }, 100); 
+      const scrollHeight = dialogBoxElement.scrollHeight;
+      const currentScrollTop = dialogBoxElement.scrollTop;
+      const targetScrollTop = scrollHeight - dialogBoxElement.clientHeight;
+      const scrollDifference = targetScrollTop - currentScrollTop;
+      const animationDuration = 500; // Adjust the duration of the animation
+  
+      let startTime: number;
+  
+      const animateScroll = (timestamp: number) => {
+        if (!startTime) {
+          startTime = timestamp;
+        }
+  
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / animationDuration, 1); // Ensure progress does not exceed 1
+  
+        const newScrollTop = currentScrollTop + scrollDifference * progress;
+        dialogBoxElement.scrollTop = newScrollTop;
+  
+        if (progress < 1) {
+          requestAnimationFrame(animateScroll);
+        }
+      };
+  
+      requestAnimationFrame(animateScroll);
+    }, 100); // Adjust the delay as needed
   }
 
-  retriveNewMessage(message:any){
-  
+  retriveNewMessage(message:any)
+  { 
     // user adalah admin
     if (this.isAdmin == 1)
     {   
@@ -207,9 +250,13 @@ export class ChatComponent {
                                           , group_ally: true
                                           , is_first: true
                                           , is_last: true
+                                          , attachment_url: message.attachment_url
+                                          , is_picture: false
+                                          , file_name: message.file_name
                                           , }
                                         )
                 this.calculate_dialogMessages_isFirst_isLast()
+                this.checkLinkValidityForIndex(this.dialogMessages.length - 1)
                 console.log(this.dialogMessages)
 
         } 
@@ -228,9 +275,13 @@ export class ChatComponent {
                                           , group_ally: false
                                           , is_first: true
                                           , is_last: true
+                                          , attachment_url: message.attachment_url
+                                          , is_picture: false
+                                          , file_name: message.file_name
                                           , }
                                         )
                 this.calculate_dialogMessages_isFirst_isLast()
+                this.checkLinkValidityForIndex(this.dialogMessages.length - 1)
                 console.log(this.dialogMessages)
         }
     } 
@@ -254,9 +305,13 @@ export class ChatComponent {
                                       , group_ally: false
                                       , is_first: true
                                       , is_last: true
+                                      , attachment_url: message.attachment_url
+                                      , is_picture: false
+                                      , file_name: message.file_name
                                       , }
                                     )
             this.calculate_dialogMessages_isFirst_isLast()
+            this.checkLinkValidityForIndex(this.dialogMessages.length - 1)
             console.log(this.dialogMessages)
           } 
           // kita sebagai client ngirim messeage,
@@ -273,9 +328,13 @@ export class ChatComponent {
                                       , group_ally: true
                                       , is_first: true
                                       , is_last: true
+                                      , attachment_url: message.attachment_url
+                                      , is_picture: false
+                                      , file_name: message.file_name
                                       , }
                                     )
             this.calculate_dialogMessages_isFirst_isLast()
+            this.checkLinkValidityForIndex(this.dialogMessages.length - 1)
             console.log(this.dialogMessages)
           }
     }
@@ -389,18 +448,6 @@ export class ChatComponent {
       this.dialogMessages[i] = message;
     }
   }
-
-  // translateTimestampToDatetimeString(timestampSource: number): string {
-  //   const date = new Date(timestampSource * 1000); // Convert timestamp to milliseconds
-  //   const year = date.getFullYear();
-  //   const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding leading zero if needed
-  //   const day = ('0' + date.getDate()).slice(-2); // Adding leading zero if needed
-  //   const hours = ('0' + date.getHours()).slice(-2); // Adding leading zero if needed
-  //   const minutes = ('0' + date.getMinutes()).slice(-2); // Adding leading zero if needed
-  //   const seconds = ('0' + date.getSeconds()).slice(-2); // Adding leading zero if needed
-  
-  //   return `${year}-${month}-${day} ${hours}:${minutes}`;
-  // }
   
   translateTimestampToDatetimeString(timestampSource: number): string {
     const date = new Date(timestampSource * 1000); // Convert timestamp to milliseconds
@@ -432,4 +479,87 @@ export class ChatComponent {
   sort_sidebarLatestMessages():void{
     this.sidebarLatestMessages.sort((a, b) => b.timestamp - a.timestamp);
   }
+
+  onFileSelected(event: any) {
+    console.log(this.selectedFile)
+    this.selectedFile = event.target.files[0];
+    // this.uploadFile()
+    this.previewImage(this.selectedFile)
+    this.checkValidityForNewAttachment()
+    
+  }
+
+  previewImage(file: File) {
+    const reader = new FileReader();
+    if (file) {
+      reader.readAsDataURL(file);  
+      reader.onload = () => {
+        this.renderPreview = reader.result;
+      };
+    }
+    
+    else{
+      this.renderPreview = null;
+    }
+    
+    
+  }
+
+  uploadFile():void{
+    if (this.selectedFile) {
+      this.attachmentData = new FormData();
+      this.attachmentData.append('file', this.selectedFile);
+      this.sendMessage()
+    }  else {
+      console.error('No file selected.');
+      // Handle no file selected
+      Swal.fire('Attachment Chat ', 'No file selected', 'warning');
+    }
+    
+  }
+
+  resetVar():void{
+    this.renderPreview = null;
+    this.selectedFile = new File(['file content'], '', { type: 'text/plain' });
+    this.selectedFile_isPicture = false;
+    console.log(this.selectedFile)
+  }
+
+  closePreviewImage(){
+    this.resetVar()
+    this.scrollToBottom()
+  }
+
+  checkLinkValidityForIndex(index: number) {
+    if (index >= 0 && index < this.dialogMessages.length) {
+      const message = this.dialogMessages[index];
+      const img = new Image();
+      img.onload = () => {
+        message.is_picture = true; // Set is_link_valid to true if image loads successfully
+      };
+      img.src = message.attachment_url; // Load the image to trigger onload or onerror events
+    } else {
+      console.error('Invalid index');
+    }
+  }
+
+  checkLinkValidityForAll() {
+    this.dialogMessages.forEach((message, index) => {
+      const img = new Image();
+      img.onload = () => {
+        message.is_picture = true; // Set is_link_valid to true if image loads successfully
+      };
+      img.src = message.attachment_url; // Load the image to trigger onload or onerror events
+    });
+  }
+
+  checkValidityForNewAttachment(){
+    const img = new Image();
+    this.selectedFile_isPicture = false
+    img.onload = () => {
+      this.selectedFile_isPicture = true
+    };
+    img.src = URL.createObjectURL(this.selectedFile);
+  }
+
 }

@@ -77,47 +77,150 @@
           
         </div>
         
-        <div class="dialog-box" #dialogBox (scroll)="onScroll($event)">
-          <div [ngClass]="{'dialog':true, 'marginLast':message.is_last }" *ngFor="let message of dialogMessages">
-            <div class="message-wrapper">
-              
+        <!-- Start --- tampilan kondisi normal, tidak sedang preview attach file -->
+        <!-- <ng-container *ngIf="this.selectedFile.name == ''"> -->
+          <div [ngClass]="{'dialog-box':this.selectedFile.name == '' ,
+                           'dialog-box-preview-image':this.selectedFile.name != '' &&  selectedFile_isPicture ,
+                           'dialog-box-preview-file': this.selectedFile.name != '' && !selectedFile_isPicture 
+                          }" #dialogBox (scroll)="onScroll($event)">
+            <div [ngClass]="{'dialog':true, 'marginLast':message.is_last }" *ngFor="let message of dialogMessages">
+
               <!-- kanan -->
               <ng-container *ngIf="message.group_ally">
-                <div  [ngClass]="{'message-bubble-right':true, 'flat-top-right':!message.is_first, 'flat-bottom-right':!message.is_last }" >
-                  <div class="d-flex justify-content-between">
-                    <div class="timestamp">{{ message.date_time_string }}</div>
-                    <div class="user marginLeft20">{{ message.sender_name_used }}</div>
+                <div class="message-wrapper" *ngIf="message.attachment_url != '' && message.is_picture ">
+                  <div [ngClass]="{'message-bubble-right':true, 'flat-bottom-right':true, 'flat-top-right':!message.is_first}">
+                    <div class="container-bubble-attachment-picture" >
+                      <img [src]="message.attachment_url" class="preview-image" alt="Preview">
+                    </div>
                   </div>
-                  <span>{{ message.message }}</span>
+                </div>
+
+                <div class="message-wrapper" *ngIf="message.attachment_url != '' && !message.is_picture ">
+                  <div [ngClass]="{'message-bubble-right':true, 'flat-bottom-right':true, 'flat-top-right':!message.is_first}">
+                    Download : 
+                    <a href="{{message.attachment_url}}" target="_blank" class="btn btn-primary">
+                      <i class="fas fa-paperclip"></i> {{message.file_name}}
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="message-wrapper">
+                  <div  [ngClass]="{'message-bubble-right':true, 'flat-top-right':!message.is_first || message.attachment_url != '', 'flat-bottom-right':!message.is_last }" >
+                    <div class="d-flex justify-content-between">
+                      <div class="timestamp">{{ message.date_time_string }}</div>
+                      <div class="user marginLeft20">{{ message.sender_name_used }}</div>
+                    </div>
+                    <span>{{ message.message }}</span>
+                  </div>
                 </div>
               </ng-container>
 
-              <!-- kiri -->
+                <!-- kiri -->
               <ng-container *ngIf="!message.group_ally">
-                <div  [ngClass]="{'message-bubble-left':true, 'flat-top-left':!message.is_first, 'flat-bottom-left':!message.is_last }" >
-                  <div class="d-flex justify-content-between">
-                    <div class="user">{{ message.sender_name_used }}</div>
-                    <div class="timestamp marginLeft20">{{ message.date_time_string }}</div>
+                <div class="message-wrapper" *ngIf="message.attachment_url != '' && message.is_picture ">
+                  <div [ngClass]="{'message-bubble-left':true, 'flat-bottom-left':true, 'flat-top-left':!message.is_first}">
+                    <div class="container-bubble-attachment-picture" >
+                      <img [src]="message.attachment_url" class="preview-image" alt="Preview">
+                    </div>
                   </div>
-                  <span>{{ message.message }}</span>
+                </div>
+
+                <div class="message-wrapper" *ngIf="message.attachment_url != '' && !message.is_picture ">
+                  <div [ngClass]="{'message-bubble-left':true, 'flat-bottom-left':true, 'flat-top-left':!message.is_first}">
+                    Download : 
+                    <a href="{{message.attachment_url}}" target="_blank" class="btn btn-primary">
+                      <i class="fas fa-paperclip"></i> {{message.file_name}}
+                    </a>
+                  </div>
+                </div>
+
+                <div class="message-wrapper">
+                  <div  [ngClass]="{'message-bubble-left':true, 'flat-top-left':!message.is_first || message.attachment_url != '', 'flat-bottom-left':!message.is_last }" >
+                    <div class="d-flex justify-content-between">
+                      <div class="user">{{ message.sender_name_used }}</div>
+                      <div class="timestamp marginLeft20">{{ message.date_time_string }}</div>
+                    </div>
+                    <span>{{ message.message }}</span>
+                  </div>
                 </div>
               </ng-container>
 
             </div>
           </div>
-        </div>
-    
-      
+        <!-- </ng-container> -->
+        <!-- End =============== tampilan kondisi normal, tidak sedang preview attach file ===============--->
+
+        <!-- Start =============== tampilan kondisi tidak normal, sedang preview image attachment ===============--->
+        <ng-container *ngIf="this.selectedFile.name != '' && selectedFile_isPicture">
+          <div class="render-box-image">
+            <!-- Start text and close btn -->
+            <div class="row align-items-center">
+              <div class="col-1"></div>
+              <div class="col-5">
+                <h4  class="preview-text">Preview Attachment</h4>
+              </div>
+              <div class="col-5 text-end">
+                <h4><i (click)="closePreviewImage()" class="fa fa-times close-icon"></i></h4>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <!-- end text and close btn -->
+            
+            <!-- start --- image preview container -->
+            <div class="container-attachment-image">
+                <img [src]="renderPreview" class="preview-image" alt="Preview">
+            </div>
+            <!-- end --- image preview container -->
+          </div>
+        </ng-container>
+        <!-- End =============== tampilan kondisi tidak normal, sedang preview image attachment ===============--->
+
+        <!-- Start =============== tampilan kondisi tidak normal, sedang preview file attachment ===============--->
+        <ng-container *ngIf="this.selectedFile.name != '' && !selectedFile_isPicture">
+          <div class="render-box-file">
+            <!-- Start text and close btn -->
+            <div class="row align-items-center">
+              <div class="col-1"></div>
+              <div class="col-5">
+                <h4  class="preview-text">Attachment File</h4>
+              </div>
+              <div class="col-5 text-end">
+                <h4><i (click)="closePreviewImage()" class="fa fa-times close-icon"></i></h4>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <!-- end text and close btn -->
+            
+            <!-- start --- image preview container -->
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10"><h3><i class="fas fa-file"></i>&nbsp;&nbsp;{{this.selectedFile.name}}</h3></div>
+              <div class="col-1"></div>
+            </div>
+            <!-- end --- image preview container -->
+          </div>
+        </ng-container>
+        <!-- End =============== tampilan kondisi tidak normal, sedang preview file attachment ===============--->
+
+        <!-- START =============== tampilan untuk button input dan enter chat -->
         <div class="input-box">
-          <div class="row">
-            <div class="col-10">
-              <input class="form-control" [(ngModel)]="newMessage" placeholder="Type your message..." />
+          <div class="input-container">
+            <input type="file" #fileInput style="display: none" (change)="onFileSelected($event); fileInput.value = ''" />
+
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text icon-search" (click)="fileInput.click()">
+                  <i class="fas fa-paperclip"></i>
+                </span>
+              </div>
+              <input class="form-control text-box-left" [(ngModel)]="newMessage" placeholder="Type your message..." />
             </div>
-            <div class="col-2 d-grid gap-2">
-              <button  type="button" class="btn send-color btn-block" (click)="sendMessage()">Send</button>
-            </div>
+
+            <button type="button" class="btn send-color" (click)="sendMessage()">Send</button>
           </div>
         </div>
+        <!-- END =============== tampilan untuk button input dan enter chat -->
+
       </ng-container>
     </div>
   </div>

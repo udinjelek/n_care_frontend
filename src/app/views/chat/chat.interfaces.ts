@@ -18,4 +18,7 @@ export interface DialogMessage {
   group_ally: boolean;
   is_first: boolean;
   is_last: boolean;
+  attachment_url: string;
+  is_picture: boolean;
+  file_name: string;
 }

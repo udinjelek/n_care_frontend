@@ -49,15 +49,27 @@ export class ChatMessageService {
        );
   }
 
-  public sendMessage(params: {self_id: number, target_id: number, message: string}): Observable<any>{
-    const requestBody = {
-      self_id: params.self_id,
-      target_id: params.target_id,
-      message: params.message
-    };
-  
+  public sendMessage(file: File, self_id:number, target_id: number, message: string): Observable<any>{
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('self_id', self_id.toString());
+    formData.append('target_id', target_id.toString());
+    formData.append('message', message);
+    
+
+    // You can add headers if needed, such as for authentication
+    const headers = new HttpHeaders();
+
     return this.http.post(
-      API_BASE_URL + 'send_message', requestBody
+      API_BASE_URL + 'send_message',
+      formData,
+      { headers }
+    );
+  }
+
+  public uploadFile(params:FormData): Observable<any>{
+    return this.http.post(
+      API_BASE_URL + 'upload_file', params
     );
   }
 }
