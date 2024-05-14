@@ -1,15 +1,4 @@
- /* Add styles to adjust height, padding, and appearance */
-//  * {
-//     margin: 0;
-//     padding: 0;
-//     box-sizing: border-box;
-//   }
-  
-//   // Optionally, apply specific styles to commonly used elements
-//   body, html {
-//     height: 100%;
-//     margin: 0;
-//   }
+
 .chat-container {
   display: flex;
   justify-content: space-between;
@@ -18,7 +7,6 @@
   overflow-y: hidden; /* Disable horizontal scrolling */
   background-color:rgb(34, 33, 33);
   // background-image: linear-gradient(to bottom right, #1ECBCA,  #1c8bb7);
-  background-color: #eaeaea;
   background-image: url('/assets/images/bunga-web.jpg');
   background-repeat: repeat;
 }
@@ -51,18 +39,12 @@
 
   .sidebar-chat {
     width: 300px;
-    background-color:#003d7d;
-    background-color:#151414;
     background-image: linear-gradient(to bottom right, #1ECBCA,  #1c8bb7);
-    color:bisque;
-    color:#888;
     color:#f0f0f0;
   }
 
   .sidebar-chat-mobile {
     width: 100%;
-    background-color:#003d7d;
-    background-color:#151414;
     background-image: linear-gradient(to bottom right, #1ECBCA,  #1c8bb7);
     color:bisque;
     color:#888;
@@ -88,10 +70,6 @@
   }
   
   .user-container:hover {
-    background-color:#094b91;
-    background-color:#423f3f;
-    background-color:#5DD8D3;
-    background-color:#5587be;
     background-color:#5DD8D3;
     color:#2d2d2d;
   }
@@ -113,9 +91,6 @@
     /* Add more user photo styles if needed */
   }
   
-  .user-details {
-  
-  }
 
   .header-icons {
     display: flex;
@@ -133,11 +108,8 @@
     padding: 0px 10px;
     height: 40px;
     .icon-search {
-      // background-color: transparent;
-      // border: none;
       border-top-right-radius: 0px;
       border-bottom-right-radius: 0px;
-      background-color:#423f3f;
       background-color:#eaeaea;
       height: 100%;
       display: flex;
@@ -229,9 +201,6 @@
   }
 
   .message-bubble-right {
-    background-color: #f1f0f0;
-    background-color: #5a5a5a;
-    background-color:#151414;
     background-color:#ffffff;
     border-radius: 15px;
     padding: 10px 15px;
@@ -242,9 +211,6 @@
   }
 
   .message-bubble-left {
-    background-color: #f1f0f0;
-    background-color: #5a5a5a;
-    background-color:#151414;
     background-color:#ffffff;
     border-radius: 15px;
     padding: 10px 15px;
@@ -285,7 +251,6 @@
   }
   .user {
     font-weight: bold;
-    // margin-right: 5px;
   }
 
   .timestamp {
@@ -303,54 +268,22 @@
   }
 
   .input-box {
-    // display: flex;
-    // justify-content: space-between;
-    // align-items: center;
-    // margin-left: 0px;
     padding: 5px 10px 5px 10px; /* Add padding if needed */
-    background-color: #f0f0f0; /* Add background color if needed */
-    background-color: #423f3f; /* Add background color if needed */
     background-color: #ffffff; /* Add background color if needed */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(255, 255, 255, 0.1) inset;
   }
   
   .input-box-mobile {
-    // display: flex;
-    // justify-content: space-between;
-    // align-items: center;
-    // margin-left: 0px;
     padding: 5px 10px 5px 10px; /* Add padding if needed */
-    background-color: #f0f0f0; /* Add background color if needed */
-    background-color: #423f3f; /* Add background color if needed */
-    background-color: #ffffff; /* Add background color if needed */
     background-image: linear-gradient(to bottom right, #1ECBCA, #17C7C4, #18AEBA, #17B4B9);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(255, 255, 255, 0.1) inset;
   }
-  // input {
-  //   flex-grow: 1;
-  //   padding: 5px;
-  //   margin-right: 10px;
-  // }
-  
-  .input-chat{
-    // padding: 5px;
-    // // width: auto;
-    // margin-right: 10px;
-  }
-
-  button {
-    // padding: 5px;
-    // margin-left: 10px;
-    // padding: 5px 10px;
-  }
   
   input{
-    background-color:#151414;
     background-color:#ffffff;
   }
 
   .send-color{
-    background-color:#151414;
     background-color:#ffffff;
     border-color: #adadad;
     width: auto; /* Allow button to adjust width based on content */
