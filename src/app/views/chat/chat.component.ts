@@ -58,7 +58,10 @@ export class ChatComponent {
   attachmentData:FormData = new FormData()
   
   renderPreview: string | ArrayBuffer | null = null;
+  
+  isWidthWeb: boolean = true;
 
+  mobileChatBoxActive: boolean = false;
   getSidebarChat(){
     this.selfid
     this.chatMessageService.getSidebarChat({'self_id': this.selfid}).subscribe({ 
@@ -95,6 +98,7 @@ export class ChatComponent {
       this.retriveNewSidebar(message);
       
     });
+    this.checkWidthWeb();
   }
 
   openSettings(){}
@@ -142,11 +146,12 @@ export class ChatComponent {
   // }
 
   userListSelected(selected_user:any){
-   
+    this.mobileChatBoxActive = true
     if (selected_user.userid != this.dialogUser.userid )
     {
       this.setDialogUser(selected_user)
       this.loadChatFrom_dialogUser()
+
     }
     
   }
@@ -233,6 +238,10 @@ export class ChatComponent {
 
   retriveNewMessage(message:any)
   { 
+
+    console.log('jelek:')
+    console.log(message)
+
     // user adalah admin
     if (this.isAdmin == 1)
     {   
@@ -562,4 +571,19 @@ export class ChatComponent {
     img.src = URL.createObjectURL(this.selectedFile);
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkWidthWeb();
+  }
+
+  checkWidthWeb() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    this.isWidthWeb = width > height
+  }
+
+  deactive_mobileChatBoxActive(){
+    this.mobileChatBoxActive = false;
+  }
 }

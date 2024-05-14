@@ -1,14 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, HostListener  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../auth.service';
-import { LoginService } from 'src/app/_services/login.service'
+import { LoginService } from 'src/app/_services/login.service';
+import { trigger, transition, animate, style } from '@angular/animations';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('devAnimationDev', [
+      transition(':leave', [
+        style({ transform: 'translateX(0)' }),
+        animate('0.3s ease-out', style({ transform: 'translateX(-100%)' }))
+      ]),
+      transition(':enter', [
+        style({ transform: 'translateX(100%)', opacity: 0 }),
+        animate('0.3s ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
+      ])
+    ]),
+    trigger('devAnimationMain', [
+      transition(':leave', [
+        style({ transform: 'translateX(0)' }),
+        animate('0.3s ease-out', style({ transform: 'translateX(-100%)' }))
+      ]),
+      transition(':enter', [
+        style({ transform: 'translateX(100%)', opacity: 0 }),
+        animate('0.3s ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
+      ])
+    ])
+  ]
 })
 export class LoginComponent {
   username: string = '';
@@ -18,7 +41,10 @@ export class LoginComponent {
   isMouseOver: boolean = false;
   listNonAdmin: any[] = [];
   listAdmin: any[] = [];
-
+  isWidthWeb: boolean = true;
+  isDevShow: boolean = false;
+  showMain = true;
+  showDevMode = false;
   constructor(  
     private authService: AuthService, 
     private router: Router,
@@ -76,6 +102,7 @@ export class LoginComponent {
   }
   
   ngOnInit(): void {
+    this.checkWidthWeb();
     this.loadDevModeUser();
   }
 
@@ -110,5 +137,26 @@ export class LoginComponent {
   setUser(user_selected:any){
     this.username = user_selected.username; 
     this.password = user_selected.password; 
+    this.isDevShow =false;
+  }
+
+  checkWidthWeb() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    this.isWidthWeb = width > height
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkWidthWeb();
+  }
+
+  showHideDev(){
+    this.isDevShow = !this.isDevShow;
+  }
+
+  test(){
+    console.log('test')
   }
 }

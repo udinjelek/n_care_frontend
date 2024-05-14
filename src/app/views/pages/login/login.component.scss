@@ -9,3 +9,62 @@
   .custom-btn-last {
     border-bottom-right-radius: 0.65rem; /* Curved bottom-right corner */
   }
+
+  .width300{
+    width: 1800px;
+  }
+
+  .backgroundImageWeb{
+    background-image: url('/assets/images/bunga-web.jpg');
+   
+  }
+
+  .backgroundLinear{
+    
+    background-image: linear-gradient(to bottom right, #1ECBCA,  #1c8bb7);
+    background-size: cover;
+    outline: none;
+  }
+  
+  .heightFull{
+    height: 100vh;
+  }
+
+  .circle-button{
+    position: fixed;
+    top: 25px; /* Adjust the top position as needed */
+    right: 25px; /* Adjust the right position as needed */
+    width: 60px; /* Adjust the button size as needed */
+    height: 60px; /* Adjust the button size as needed */
+    background-color: #ffff36; /* Button background color */
+    color: #000; /* Button text color */
+    border: none;
+    border-radius: 50%; /* Make the button round */
+    font-size: 24px; /* Adjust the font size as needed */
+    cursor: pointer;
+    z-index: 50; /* Ensure the button is on top of other elements */
+    font-weight: bold; /* Make the font bold */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+  }
+
+  .devMode {
+    transition: transform 0.3s ease-out;
+  }
+
+  .fixed{
+    position:fixed;
+  }
+
+  .desc-dev{
+    color:white; 
+    text-align: end; 
+    padding: 10px 10px;
+    margin: 80px 0px;
+    background-color: #BEB2FF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+    border-radius: 0.65rem; /* Curved top-left corner */
+  }
+
+  .svg-container{
+    pointer-events: none;
+  }
