@@ -40,7 +40,11 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 
-const config: SocketIoConfig = { url: SOCKET_IO_URL, options: {} };
+const config: SocketIoConfig = { 
+  url: SOCKET_IO_URL, 
+  options: {transports: ['websocket'],
+  upgrade: false,} 
+};
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
