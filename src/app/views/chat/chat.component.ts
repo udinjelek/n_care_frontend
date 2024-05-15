@@ -60,7 +60,7 @@ export class ChatComponent {
   renderPreview: string | ArrayBuffer | null = null;
   
   isWidthWeb: boolean = true;
-
+  connectionStatus = 'Disconnected';
   mobileChatBoxActive: boolean = false;
   getSidebarChat(){
     this.selfid
@@ -89,7 +89,20 @@ export class ChatComponent {
 
   ngOnInit(): void {
     this.getSidebarChat();
-    this.socketService.connectToChat();
+    // // original code
+    // this.socketService.connectToChat();
+
+    this.socketService.connectToChat()
+    .subscribe({
+      next: (message) => {
+        this.connectionStatus = message;  // Update connection status
+      },
+      error: (error) => {
+        console.error('Error connecting to websocket:', error);
+        this.connectionStatus = 'Connection Error';
+      },
+    });
+
     this.socketService.onNewMessage().subscribe((message: any) => {
       // Handle new message received
       console.log('New message received:', message);
