@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http'; // Import HttpClientMod
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SocketService } from './_services/socket.service';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-
+import { SOCKET_IO_URL } from './config';
 // Import routing module
 import { AppRoutingModule } from './app-routing.module';
 
@@ -40,7 +40,7 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 
-const config: SocketIoConfig = { url: 'http://127.0.0.1:5001', options: {} };
+const config: SocketIoConfig = { url: SOCKET_IO_URL, options: {} };
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
