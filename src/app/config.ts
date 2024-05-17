@@ -5,4 +5,4 @@
 // export const API_BASE_URL = 'https://care-chat-api.polaris.my.id/api/';
 // export const SOCKET_IO_URL = 'https://care-chat-api.polaris.my.id';
 export const API_BASE_URL = 'https://care-chat-api.betablog.my.id/api/';
-export const SOCKET_IO_URL = 'https://care-chat-api.betablog.my.id';
+export const SOCKET_IO_URL = 'https://care-chat-api.betablog.my.id:8767';
