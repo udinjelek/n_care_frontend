@@ -1,8 +1,4 @@
-// export const API_BASE_URL = 'http://127.0.0.1:5001/api/';
-// export const SOCKET_IO_URL = 'http://127.0.0.1:5001';
-// export const API_BASE_URL = 'https://192.168.31.117:5001/api/';
-// export const SOCKET_IO_URL = 'https://192.168.31.117:5001';
-// export const API_BASE_URL = 'https://care-chat-api.polaris.my.id/api/';
-// export const SOCKET_IO_URL = 'https://care-chat-api.polaris.my.id';
-export const API_BASE_URL = 'https://care-chat-api.betablog.my.id/api/';
-export const SOCKET_IO_URL = 'https://care-chat-api.betablog.my.id';
+// export const API_BASE_URL = 'http://127.0.0.1:50001/api/'; // test for local
+// export const SOCKET_IO_URL = 'http://127.0.0.1:50001'; // test for local
+export const API_BASE_URL = 'http://care-chat-api.polaris.my.id:50001/api/'; // test for production
+export const SOCKET_IO_URL = 'http://care-chat-api.polaris.my.id:50001'; // test for production
